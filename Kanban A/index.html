@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro Kanban SESI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dropzone {
+            min-height: 280px;
+        }
+        .dropzone.drag-over {
+            background-color: #e2e8f0;
+            border-color: #3b82f6;
+        }
+        .kanban-card {
+            cursor: grab;
+            user-select: none;
+        }
+        .kanban-card:active {
+            cursor: grabbing;
+        }
+        .kanban-card.dragging {
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen font-sans p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto border-2 border-red-600 rounded-lg p-6 bg-slate-50 relative shadow-sm">
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h1 class="text-xl font-bold text-slate-700">Programação Front End.</h1>
+                <div class="bg-red-700 text-white font-extrabold text-xl md:text-2xl px-4 py-1.5 inline-block mt-1 rounded-sm">
+                    Situação de Aprendizado # 16 Drag and Drop A
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="font-extrabold text-2xl text-slate-700 tracking-wider">
+                    <span class="inline-block border-t-2 border-b-2 border-slate-700">S</span>ENAI
+                </div>
+                <div class="text-xs font-semibold text-slate-600 tracking-widest">SÃO PAULO</div>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+            <div>
+                <p class="text-base font-bold text-black">
+                    Objetivo: <span class="font-normal">Desenvolver um Quadro de Kanban utilizando Drag and Drop API</span>
+                </p>
+                <p class="text-red-600 font-bold text-sm mt-1">
+                    Entrega no GitHub Pages, deixar o Link no Classroom
+                </p>
+            </div>
+            <div class="bg-orange-500 text-white font-bold px-4 py-2 text-sm rounded shadow-sm shrink-0">
+                Tempo de execução:<br>25 Minutos
+            </div>
+        </div>
+
+        <div class="mb-6 bg-white p-3 rounded-lg border border-slate-200 flex flex-wrap gap-2 items-center justify-between">
+            <span class="font-bold text-slate-700 text-sm">Adicionar Tarefa:</span>
+            <form id="add-card-form" class="flex gap-2 flex-1 max-w-md">
+                <input type="text" id="new-card-title" placeholder="Nome da tarefa..." required class="px-3 py-1.5 text-sm border border-slate-300 rounded flex-1 focus:outline-none focus:border-blue-500">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-1.5 rounded">Adicionar</button>
+            </form>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h2 class="font-bold text-black text-base mb-2">Quadro Kanban - SESI</h2>
+                <div class="grid grid-cols-2 gap-4 bg-slate-200/50 p-3 rounded-xl border border-slate-200">
+                    <div id="box-1" class="dropzone border-2 border-dashed border-slate-300 bg-slate-200/60 rounded-xl p-3 flex flex-col gap-2">
+                        <div class="kanban-card bg-[#2b7bba] text-white font-semibold text-xs p-3 rounded shadow-sm flex justify-between items-center group" draggable="true" id="card-1">
+                            <span>Javascript Prof.Pety</span>
+                            <button onclick="removeCard('card-1')" class="text-red-200 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="kanban-card bg-[#2b7bba] text-white font-semibold text-xs p-3 rounded shadow-sm flex justify-between items-center group" draggable="true" id="card-2">
+                            <span>Modelar Banco de Dados Prof. Jonh</span>
+                            <button onclick="removeCard('card-2')" class="text-red-200 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="kanban-card bg-[#2b7bba] text-white font-semibold text-xs p-3 rounded shadow-sm flex justify-between items-center group" draggable="true" id="card-3">
+                            <span>Criar API REST</span>
+                            <button onclick="removeCard('card-3')" class="text-red-200 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="box-2" class="dropzone border-2 border-dashed border-slate-300 bg-slate-200/60 rounded-xl p-3 flex flex-col gap-2"></div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="font-bold text-black text-base mb-2">Quadro Kanban - SESI</h2>
+                <div class="grid grid-cols-2 gap-4 bg-slate-200/50 p-3 rounded-xl border border-slate-200">
+                    <div id="box-3" class="dropzone border-2 border-dashed border-slate-300 bg-slate-200/60 rounded-xl p-3 flex flex-col gap-2"></div>
+                    <div id="box-4" class="dropzone border-2 border-dashed border-slate-300 bg-slate-200/60 rounded-xl p-3 flex flex-col gap-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let draggedCard = null;
+        let cardCount = 4;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDragAndDrop();
+            initForm();
+        });
+
+        function initDragAndDrop() {
+            const cards = document.querySelectorAll('.kanban-card');
+            const dropzones = document.querySelectorAll('.dropzone');
+
+            cards.forEach(card => attachCardEvents(card));
+
+            dropzones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragenter', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    if (draggedCard) {
+                        zone.appendChild(draggedCard);
+                    }
+                });
+            });
+        }
+
+        function attachCardEvents(card) {
+            card.addEventListener('dragstart', (e) => {
+                draggedCard = card;
+                card.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', card.id);
+            });
+
+            card.addEventListener('dragend', () => {
+                draggedCard = null;
+                card.classList.remove('dragging');
+            });
+        }
+
+        function initForm() {
+            const form = document.getElementById('add-card-form');
+            const input = document.getElementById('new-card-title');
+            const targetZone = document.getElementById('box-1');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = input.value.trim();
+                if (title) {
+                    const id = `card-${cardCount++}`;
+                    const card = document.createElement('div');
+                    card.className = 'kanban-card bg-[#2b7bba] text-white font-semibold text-xs p-3 rounded shadow-sm flex justify-between items-center group';
+                    card.setAttribute('draggable', 'true');
+                    card.id = id;
+                    card.innerHTML = `
+                        <span>${escapeHtml(title)}</span>
+                        <button onclick="removeCard('${id}')" class="text-red-200 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    `;
+                    targetZone.appendChild(card);
+                    attachCardEvents(card);
+                    input.value = '';
+                }
+            });
+        }
+
+        function removeCard(id) {
+            const card = document.getElementById(id);
+            if (card) {
+                card.remove();
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
